@@ -105,17 +105,28 @@ def printAnalysisForProvincie(regione):
        
             data_frame.plot(x ='date', y='tot', figsize=(13,8), rot=30, title=prov)	
 
+def compute_percentage(x,y):
+      pct = float(x/y) * 100
+      return round(pct, 2)
+
+
 
 def getDataFrameForRegione(regione):
     print ("******************************" )
     print ("******** Regione %s ********" % regione)
     sorted_list = sorted(regioni[regione], key=lambda k: k['date']) 
     data_frame= pd.DataFrame.from_dict(sorted_list)       
-   # data_frame["inc"] = data_frame['Positivi'].diff(1)
-    data_frame["Incr. Positivi (%)"] = data_frame['Positivi'].pct_change(1)
+    data_frame["Incr. Positivi (%)"] = (data_frame['Positivi'].pct_change(1))*100
     data_frame["Incr. TI"] = data_frame['Ti'].diff(1)
+    data_frame["% Ti"] =(data_frame['Ti']/data_frame["Positivi"])*100
+    
+    data_frame["% Osp."] =(data_frame['Ospedalizzati']/data_frame["Positivi"])*100
+    
     data_frame["Incr. Ospe"] = data_frame['Ospedalizzati'].diff(1)
-    return data_frame
+    #data_frame["Nuovi Tamponi"]=data_frame['Tamponi'].diff(1)
+    #data_frame["% Tamponi"] =data_frame['Nuovi casi']/data_frame["Nuovi Tamponi"]
+    data_frame.round(1)
+    return  data_frame.round(2)
  
 
 
@@ -125,7 +136,7 @@ def getDataFrameForRegione(regione):
 threads_provincie = []
 threads_regioni = []
 
-rangeGiorni=30
+rangeGiorni=45
 for i in range(0,rangeGiorni):
     d =datetime.date.today()-datetime.timedelta(i)
     t = threading.Thread(target=updateForProvincie, args=(d,))
@@ -171,6 +182,12 @@ for k in regioni.keys():
     regioniT[k]["ti"]= [np.nan_to_num(x) for x in dic["Ti"].values()]
     regioniT[k]["inc_ti"]= [np.nan_to_num(x) for x in dic["Incr. TI"].values()]
     
+    regioniT[k]["% Ospedalizzati"]= [np.nan_to_num(x) for x in dic["% Osp."].values()]
+    regioniT[k]["% TI"]= [np.nan_to_num(x) for x in dic["% Ti"].values()]
+    #regioniT[k]["inc_ti"]= [np.nan_to_num(x) for x in dic["Incr. TI"].values()]
+    regioniT[k]["Incr. Positivi (%)"] = [np.nan_to_num(x) for x in dic["Incr. Positivi (%)"].values()]
+   
+   
     print (k)
     print (10*"******")
     
@@ -179,5 +196,5 @@ for k in regioni.keys():
 
 _template = Template(filename='./corona.virus.template.html',input_encoding='utf-8',output_encoding='utf-8'
                      )
-with open('corona-virus.html', 'w') as f:
+with open('docs/index.html', 'w') as f:
     f.write((_template.render_unicode(regioni=regioniT)))

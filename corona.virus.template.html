@@ -198,14 +198,8 @@
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Dashboard</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
-          <div class="btn-group mr-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-          </div>
-          <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-            <span data-feather="calendar"></span>
-            This week
-          </button>
+          
+         
         </div>
       </div>
     % for regione in regioni.keys():
@@ -240,27 +234,27 @@ var chart = new Chart(ctx, {
         datasets: [
             
             {
-            label: "Incremento positivi",
+            label: "Incremento positivi %",
             borderColor: 'rgb(255, 255, 132)',
-            data: ${regioni[regione]["inc"]}
+            data: ${regioni[regione]["Incr. Positivi (%)"]}
             },
             {
-            label: "Ospedalizzati",
+            label: "% Ospedalizzati",
             borderColor: 'rgb(0, 99, 132)',
-            data: ${regioni[regione]["ospedalizzati"]}
+            data: ${regioni[regione]["% Ospedalizzati"]}
             },
             
             {
-            label: "Terapie  intensive",
+            label: "% TI",
             //backgroundColor: 'rgb(255, 255, 255)',
             borderColor: 'rgb(0, 255, 132)',
-            data: ${regioni[regione]["ti"]}
+            data: ${regioni[regione]["% TI"]}
             },  
-            {
-            label: "Incremento TI  intensive",
+            /*{
+           # label: "Incremento TI  intensive",
             borderColor: 'rgb(255, 0, 0)',
             data: ${regioni[regione]["inc_ti"]}
-            },          
+            },  */        
                       
         ]
     },
