@@ -136,7 +136,8 @@ def getDataFrameForRegione(regione):
 threads_provincie = []
 threads_regioni = []
 
-rangeGiorni=45
+rangeGiorni=100
+rangeGiorni=40
 for i in range(0,rangeGiorni):
     d =datetime.date.today()-datetime.timedelta(i)
     t = threading.Thread(target=updateForProvincie, args=(d,))
